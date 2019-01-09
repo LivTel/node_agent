@@ -1,0 +1,13 @@
+cd /home/dev/bin/estar/classes
+export CLASSPATH=$CLASSPATH:.
+
+#score:
+
+java org.estar.rtml.test.TestCreate -rtml_version 3.1a -score -iahost 150.204.240.8 -iaid 12345 -iaport 8080 -iauri http://150.204.240.8:8080/org_estar_loggingagent/services/NodeAgent -observation -target -target_name 2008-BLG-001 -target_ident ExoPlanetMonitor -ra 17:57:13.80 -dec -29:40:47.1 -exposure 30 s 1 -start_date 2010-04-14T12:00:00 -end_date 2010-04-14T17:00:00 -device -device_name RATCam -device_type camera -device_spectral_region optical -device_filter R -binning 2 2 -project exoplanet -contact -contact_name "Chris Mottram" -contact_user "kdh1" > example_score.rtml
+
+#request:
+
+java org.estar.rtml.test.TestCreate -rtml_version 3.1a -request -iahost 150.204.240.8 -iaid 12345 -iaport 8080 -iauri http://150.204.240.8:8080/org_estar_loggingagent/services/NodeAgent -observation -target -target_name 2008-BLG-001 -target_ident ExoPlanetMonitor -ra 17:57:13.80 -dec -29:40:47.1 -exposure 30 s 1 -start_date 2010-04-14T12:00:00 -end_date 2010-04-14T17:00:00 -device -device_name RATCam -device_type camera -device_spectral_region optical -device_filter R -binning 2 2 -project exoplanet -contact -contact_name "Chris Mottram" -contact_user "kdh1" > example_request.rtml
+
+#request with null return path:
+

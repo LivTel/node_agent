@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+
+<project name="node_agent" default="deploy" basedir=".">
+
+	<!-- The directories -->
+	<property name="root-dir" 						value="/home/dev/nrc_workspace/node_agent" />
+	<property name="web-inf-dir" 					value="${root-dir}/WEB-INF" />
+	<property name="class-dir" 						value="${web-inf-dir}/bin" />
+	<property name="lib-dir" 					 		value="${web-inf-dir}/lib" />
+	<property name="java-lib-dir" 					value="/home/dev/bin/javalib"/>
+	<property name="estar-java-lib-dir" 			value="/home/dev/bin/estar/javalib"/>
+	<property name="java-lib-thirdparty-dir" 	value="/home/dev/bin/javalib_third_party"/>
+	<property name="local-test-dir" 				value="/usr/local/tomcat/webapps" />
+	
+	<!-- other definitions -->
+	
+	<property name="war-name" value="org_estar_nodeagent"/>
+	<property name="jar-name" value="org_estar_nodeagent"/>
+
+	<!-- Cleanup -->
+
+	<target name="clean" description="Clean out dross">
+		<delete verbose="true">
+			<fileset dir="." includes="**/*~" defaultexcludes="false" />
+		</delete>
+	</target>
+
+	<!-- Prepare build directories -->
+		
+	<target name="prepare" description="Prepare build directories">
+		<mkdir dir="${class-dir}" />
+		<tstamp>
+			<format property="BUILD" pattern="yyyyMMdd_HHmm" locale="en" />
+		</tstamp>
+		<echo message="Build date: ${BUILD}" />
+		
+		<copy file="${java-lib-thirdparty-dir}/activation/activation.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/apache-axis/axis.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/commons/commons-beanutils-1.7.0.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/commons/commons-codec-1.3.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/commons/commons-collections-3.2.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/commons/commons-discovery-0.2.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/commons/commons-logging-1.0.4.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-dir}/dev_lt.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/apache-axis/jaxrpc.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/jydodb.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/log4j-1.2.13.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/activation/mail.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-dir}/ngat_astrometry.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-dir}/ngat_util_logging.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-dir}/ngat_util.jar" todir="${lib-dir}"/>
+		<copy file="${estar-java-lib-dir}/org_estar_astrometry.jar" todir="${lib-dir}"/>
+		<copy file="${estar-java-lib-dir}/org_estar_io.jar" todir="${lib-dir}"/>
+		<copy file="${estar-java-lib-dir}/org_estar_rtml.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/apache-axis/saaj.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/apache-soap/soap.jar" todir="${lib-dir}"/>
+		<copy file="${estar-java-lib-dir}/tea.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/apache-axis/wsdl4j-1.5.1.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/apache-axis/xalan.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/activation/xerces.jar" todir="${lib-dir}"/>
+		<copy file="${java-lib-thirdparty-dir}/apache-axis/xmlsec-1.2.1.jar" todir="${lib-dir}"/>
+	</target>
+
+	
+	<!-- Compile all sources -->
+
+	<target name="javac" depends="prepare" description="Compile sources">
+		<javac srcdir="." 
+			destdir="${class-dir}" 
+			debug="on"
+			target="1.5"
+			source="1.5">
+			<classpath>
+				<pathelement path="${classpath}" />
+				<fileset dir="${lib-dir}">
+					<include name="*.jar" />
+					<exclude name="${jar-name}.jar" />
+				</fileset>
+				
+				<!-- servlet.jar cannot be located in /lib if we're deploying a webapp,
+					doing so contravenes Servlet Spec 2.3, section 9.7.2 -->
+				<fileset dir="${java-lib-thirdparty-dir}/servlet">
+					<include name="servlet.jar" />
+					<include name="jsp-api.jar" />
+				</fileset>
+
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="rmic" depends="javac" description="Generate RMI stubs">
+			<rmic debug="true" base="${class-dir}"
+				includes= "org/estar/messaging/DefaultNodeAgentAsynchronousResponseHandler.class">
+				
+				<classpath>
+					<pathelement path="${classpath}" />
+					<fileset dir="${lib-dir}">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</rmic>
+		</target>
+	
+	<!-- Deploy to JAR after compile-->
+
+	<target name="jar" depends="rmic" description="Create JAR">
+		<echo message="Build number: ${BUILD}" />
+		<jar jarfile="${lib-dir}/${jar-name}.jar" basedir="${class-dir}" />
+		<copy file="${lib-dir}/${jar-name}.jar" todir="${estar-java-lib-dir}" overwrite="true"/>
+	</target>
+	
+	<!-- Build the war file for distribution -->
+	
+	<target name="war" depends="jar">
+		<!-- delete the old .war file -->
+		<delete file="${estar-java-lib-dir}/${war-name}.war" quiet="false"/> 
+		
+		<!-- create the .war file on the dev_server -->
+		<jar destfile="${estar-java-lib-dir}/${war-name}.war" basedir="${root-dir}" excludes="${root-dir}/WEB-INF/bin"/>
+	</target>
+	
+	<target name="deploy" depends="war">
+		
+		<!-- deploy war to local test server -->
+		<!-- <copy file="${estar-java-lib-dir}/${war-name}.war" todir="${local-test-dir}"/> -->
+	</target>
+	
+</project>

@@ -1,0 +1,19 @@
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<service name="NodeAgent" provider="java:RPC">
+		<parameter name="className" value="org.estar.server.NodeAgent"/>
+		<parameter name="allowedMethods" value="*"/>
+    
+		<requestFlow>
+			<chain type="RequestChain"/>
+		</requestFlow>
+	</service>
+  
+	<chain name="RequestChain">
+  		<handler type="CookieRequestHandler"/>
+  		<handler type="PingHandler"/>
+	</chain>
+	
+	<handler name="CookieRequestHandler" type="java:org.estar.handler.CookieRequestHandler"/>
+	<handler name="PingHandler" type="java:org.estar.handler.PingHandler"/>
+	
+</deployment>

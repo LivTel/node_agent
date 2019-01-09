@@ -1,0 +1,10 @@
+<undeployment xmlns="http://xml.apache.org/axis/wsdd/">
+ <service name="NodeAgent" provider="java:RPC">
+		<parameter name="className" value="org.estar.server.NodeAgent"/>
+		<parameter name="allowedMethods" value="*"/>
+    
+		<requestFlow>
+			<chain type="RequestChain"/>
+		</requestFlow>
+	</service>
+</undeployment>

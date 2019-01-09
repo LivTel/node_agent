@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="WEB-INF/src"/>
+	<classpathentry kind="src" output="work" path="work"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/node_agent_lib"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/soap.jar" sourcepath="/home/nrc/installers/jre_sdk/soap/soap-2_3_1/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tomcat_common"/>
+	<classpathentry kind="output" path="WEB-INF/bin"/>
+</classpath>
