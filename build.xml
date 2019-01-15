@@ -3,14 +3,14 @@
 <project name="node_agent" default="deploy" basedir=".">
 
 	<!-- The directories -->
-	<property name="root-dir" 						value="/home/dev/nrc_workspace/node_agent" />
-	<property name="web-inf-dir" 					value="${root-dir}/WEB-INF" />
-	<property name="class-dir" 						value="${web-inf-dir}/bin" />
-	<property name="lib-dir" 					 		value="${web-inf-dir}/lib" />
-	<property name="java-lib-dir" 					value="/home/dev/bin/javalib"/>
-	<property name="estar-java-lib-dir" 			value="/home/dev/bin/estar/javalib"/>
-	<property name="java-lib-thirdparty-dir" 	value="/home/dev/bin/javalib_third_party"/>
-	<property name="local-test-dir" 				value="/usr/local/tomcat/webapps" />
+	<property name="root-dir" 		value="/home/cjm/workspace/node_agent" />
+	<property name="web-inf-dir" 		value="${root-dir}/WEB-INF" />
+	<property name="class-dir" 		value="${web-inf-dir}/bin" />
+	<property name="lib-dir" 		value="${web-inf-dir}/lib" />
+	<property name="java-lib-dir" 		value="/home/dev/bin/javalib"/>
+	<property name="estar-java-lib-dir" 	value="/home/dev/bin/estar/javalib"/>
+	<property name="java-lib-thirdparty-dir" value="/home/dev/bin/javalib_third_party"/>
+	<property name="local-test-dir" 	value="/usr/local/tomcat/webapps" />
 	
 	<!-- other definitions -->
 	
